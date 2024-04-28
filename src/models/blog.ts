@@ -24,7 +24,7 @@ const blogSchema = new Schema({
     type: Date,
     required: true
   },
-  userId: {
+  user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: false

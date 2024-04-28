@@ -33,7 +33,7 @@ class BlogController {
   async delete(req: Request, res: Response) {
     try {
       const response = await BlogService.deleteBlog(req.params.id);
-      successResponse(req, res, "success", response, 200);
+      successResponse(req, res, "success", response, 204);
     } catch (error: any) {
       return errorResponse(req, res, error);
     }
