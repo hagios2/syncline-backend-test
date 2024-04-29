@@ -14,6 +14,9 @@ class BlogController {
 
   async create(req: Request, res: Response) {
     try {
+      // console.log(req.username, req.userAgent)
+      // let blogDeatils = req.body
+      // blogDeatils.user = req.user 
       const response = await BlogService.createBlog(req.body);
       successResponse(req, res, "success", response, 201);
     } catch (error: any) {
