@@ -13,7 +13,7 @@ class AuthController {
       const user = await AuthService.createUser(req.body);
       successResponse(req, res, "success", { user: omit(user.toJSON(), 'password')}, 201);
     } catch (error: any) {
-      return errorResponse(req, res, error);
+      errorResponse(req, res, error.message, 400);
     }
   }
 
@@ -23,7 +23,8 @@ class AuthController {
 
       return successResponse(req, res, 'success', data)
     } catch (error: any) {
-      return errorResponse(req, res, error)
+
+      errorResponse(req, res, error.message, 401)
     }
   }
 

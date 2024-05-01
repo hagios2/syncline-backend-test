@@ -3,7 +3,7 @@ import { Blog } from './blog'
 
 interface CategoryDocument extends Document {
   name: String
-  blog: [typeof Blog]
+  blog: Schema.Types.ObjectId[]
   createdAt: Date,
   updatedAt: Date
 }

@@ -5,7 +5,8 @@ interface UserDocument extends Document {
   email: string,
   password: string,
   createdAt: Date,
-  updatedAt: Date
+  updatedAt: Date,
+  _doc: object
 }
 
 const userSchema = new Schema({
@@ -30,11 +31,6 @@ const userSchema = new Schema({
   timestamps: true
 })
 
-class UserClass {
-
-}
-
-userSchema.loadClass(UserClass)
 
 const User = mongoose.model< UserDocument >('User', userSchema)
 

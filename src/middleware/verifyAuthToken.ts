@@ -1,11 +1,14 @@
-import { Next, Request, Response } from 'restify'
-import jwt from 'jsonwebtoken'
-// import { log } from '../Logger/logger'
+import restify, { Next, Request, Response } from 'restify'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { errorResponse } from '../server_responses/response'
+
+interface CustomRequest extends restify.Request {
+  user?: any
+}
 
 const SECRET = process.env.SECRET as string
 
-const verifyToken = async (req: Request, res: Response, next: Next) => {
+const verifyToken = async (req: CustomRequest, res: Response) => {
   try {
     const bearerHeader = req.headers.authorization
 
@@ -17,8 +20,9 @@ const verifyToken = async (req: Request, res: Response, next: Next) => {
           return errorResponse(req, res, error, 403)
         }
         req.user = user
-        next()
+        return
       })
+
     } else {
       return errorResponse(req, res, 'User must be authenticated', 403)
     }
@@ -27,4 +31,4 @@ const verifyToken = async (req: Request, res: Response, next: Next) => {
   }
 }
 
-export { verifyToken }
+export { verifyToken, CustomRequest }

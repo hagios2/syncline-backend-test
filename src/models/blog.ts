@@ -1,18 +1,16 @@
 import mongoose, { Document, Schema } from 'mongoose'
-import { Comment as comment} from './comment'
-import { User } from './user'
-import { Category, CategoryDocument } from './category'
 
 interface BlogDocument extends Document {
-  title: string,
-  content: string,
-  publicationDate: Date,
-  user: String,
-  tag: [String],
-  comments: [typeof comment],
-  category: typeof Category
-  createdAt: Date,
-  updatedAt: Date
+  title: string;
+  content: string;
+  publicationDate: Date;
+  user: Schema.Types.ObjectId;
+  tags: string[];
+  likes: Schema.Types.ObjectId[]
+  comments: Schema.Types.ObjectId[]
+  category: Schema.Types.ObjectId; 
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const blogSchema = new Schema({
@@ -33,7 +31,7 @@ const blogSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: false
+    required: true
   },
   tags: [{
     type: String,
@@ -44,10 +42,15 @@ const blogSchema = new Schema({
     ref: 'Comment',
     required: false
   }],
+  likes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Likes',
+    required: false
+  }],
   category: {
     type: Schema.Types.ObjectId,
     ref: 'Category',
-    required: true
+    required: false
   },
 }, {
   timestamps: true
