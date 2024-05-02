@@ -2,11 +2,11 @@ import { Blog, BlogDocument } from "../../models/blog"
 import { Comment, CommentDocument } from "../../models/comment"
 import { Category, CategoryDocument } from "../../models/category"
 import { Likes, LikesDocument } from "../../models/Likes"
+import { pusher } from "../../routes"
 
 class BlogService {
   createBlog = async (blogData: BlogDocument) => {
     try {
-      console.log(blogData)
        if (blogData.publicationDate === undefined ) {
           blogData.publicationDate = new Date()
        } 
@@ -14,6 +14,9 @@ class BlogService {
       let blog = await Blog.create(blogData)
       category?.blog.push(blog?._id)
       category?.save()
+
+      pusher.trigger("synchline-channel", "new-blog", blog)
+ 
       return blog.populate(['category', 'user'])
     } catch (error: any) {
       throw new Error(error);
@@ -22,7 +25,7 @@ class BlogService {
 
   fetchBlog = async () => {
     try {
-      let blogs = await Blog.find({}).populate(['comments', 'category', 'user', 'likes']);
+      let blogs = await Blog.find({}).sort({createdAt: -1}).populate(['comments', 'category', 'user', 'likes']);
       return blogs;
     } catch (error: any) {
       throw new Error(error);
@@ -60,8 +63,18 @@ class BlogService {
     }
   }
 
+  getBlockLikes = async (id: String) => {
+    try {
+      let comments = await Comment.find({blog: id}).sort({createdAt: -1}).populate('user')
+      return comments
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }
+
   addBlogLikes = async (id: String, likesDoc: LikesDocument) => {
     try {
+      console.log('likes', likesDoc)
       let blog = await Blog.findOne({_id: id})
       likesDoc.blog = blog?._id
       const likes = await Likes.create(likesDoc)

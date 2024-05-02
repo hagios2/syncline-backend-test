@@ -28,15 +28,15 @@ class AuthController {
     }
   }
 
-  // async logout (req: Request, res: Response) {
-  //   try {
-  //     await AuthService.logout(req.body)
+  async logout (req: Request, res: Response) {
+    try {
+      await AuthService.logout(req.body)
 
-  //     return successResponse(req, res, 'success')
-  //   } catch (error: any) {
-  //     return errorResponse(req, res, error.message, 401)
-  //   }
-  // }
+      return successResponse(req, res, 'success')
+    } catch (error: any) {
+      return errorResponse(req, res, error.message, 401)
+    }
+  }
 
   // async refreshToken (req: Request, res: Response) {
   //   try {

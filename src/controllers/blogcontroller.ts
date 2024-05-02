@@ -42,6 +42,15 @@ class BlogController {
     }
   }
 
+  async getBlogComment(req: Request, res: Response) {
+    try {
+      let response = await BlogService.getBlockLikes(req.params.id);
+      successResponse(req, res, "success", response, 200);
+    } catch (error: any) {
+      errorResponse(req, res, error.message, 400);
+    }
+  }
+
   async addComment(req: CustomRequest, res: Response) {
     try {
       let data = req.body
@@ -55,12 +64,13 @@ class BlogController {
 
   async addBlogLike(req: CustomRequest, res: Response) {
     try {
+      // console.log(req.user.user)
       let data = req.body
       data.user = req.user?.user?._id
       const response = await BlogService.addBlogLikes(req.params.id, data);
       successResponse(req, res, "success", response, 201);
     } catch (error: any) {
-      errorResponse(req, res, error.message, 400);
+      errorResponse(req, res, error.message, 500);
     }
   }
 }
