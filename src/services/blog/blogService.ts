@@ -57,7 +57,9 @@ class BlogService {
       const comment =  await Comment.create(commentDoc)
       blog?.comments.push(comment._id)
       blog?.save()
-      return comment.populate('user')
+      comment.populate('user')
+      pusher.trigger("synchline-channel", "new-comment", comment)
+      return comment
     } catch (error: any) {
       throw new Error(error);
     }
@@ -72,16 +74,21 @@ class BlogService {
     }
   }
 
-  addBlogLikes = async (id: String, likesDoc: LikesDocument) => {
+  addBlogLikes = async (blogId: String, userId: String) => {
     try {
-      console.log('likes', likesDoc)
-      let blog = await Blog.findOne({_id: id})
-      likesDoc.blog = blog?._id
-      const likes = await Likes.create(likesDoc)
+
+      let blog = await Blog.findOne({_id: blogId})
+  
+      const likes = new Likes({
+        user: userId,
+        blog: blogId
+      })
+      await likes.save()
       blog?.likes.push(likes?._id)
       await blog?.save()
       return blog?.populate('likes')
     } catch (error: any) {
+      console.log(error)
       throw new Error(error);
     }
   }

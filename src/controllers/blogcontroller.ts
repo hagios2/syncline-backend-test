@@ -64,10 +64,7 @@ class BlogController {
 
   async addBlogLike(req: CustomRequest, res: Response) {
     try {
-      // console.log(req.user.user)
-      let data = req.body
-      data.user = req.user?.user?._id
-      const response = await BlogService.addBlogLikes(req.params.id, data);
+      const response = await BlogService.addBlogLikes(req.params.id, req.user?.user?._id);
       successResponse(req, res, "success", response, 201);
     } catch (error: any) {
       errorResponse(req, res, error.message, 500);

@@ -3,12 +3,12 @@ name: Deployment
 on:
   push:
     branches: [ master ]
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check Out Repo 
+      - name: Check Out Repo
         uses: actions/checkout@v2
 
       - uses: actions/setup-node@v2
@@ -16,4 +16,16 @@ jobs:
           node-version: '18'
           cache: 'npm'
       - run: npm install
-      - run: npm test
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@v2
+        with:
+          server: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          local: 'dist'
+          remote: '/var/www/html'
