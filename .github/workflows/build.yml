@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-      - run: npm install
+      - run: npm install --legacy-peer-deps
 
       - name: Build Project
         run: npm run build
